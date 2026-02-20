@@ -69,4 +69,17 @@ class LeadController extends Controller
         return redirect()->route('leads.index')
             ->with('success', 'Lead deleted successfully.');
     }
+
+    public function updateStatus(Request $request, Lead $lead)
+    {
+        // $request->validate([
+        //     'status' => 'required|string'
+        // ]);
+
+        $lead->update([
+            'status' => $request->status
+        ]);
+
+        return back();
+    }
 }

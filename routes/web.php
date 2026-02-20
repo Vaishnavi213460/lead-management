@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('leads', LeadController::class)->except(['show']);
-    Route::post('/leads/filter', [LeadController::class,'index'])->name('leads.filter');
+    Route::match(['get', 'post'], '/leads/filter', [LeadController::class,'index'])->name('leads.filter');
     Route::patch('/leads/{lead}/status', [LeadController::class,'updateStatus'])->name('leads.updateStatus');
 });
 

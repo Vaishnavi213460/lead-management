@@ -5,12 +5,16 @@ export default function Index({ leads, filters, statuses}) {
     const { data, setData } = useForm({search: filters.search ||'', status: filters.status ||'', sort: filters.sort || 'desc'});
 
     const submit = (e) => {
-        e.preventDefault();
-        router.post(route('leads.filter'), data, {
-            preserveState: true,
-            replace: true,
-        });
-    };
+    e.preventDefault();
+
+    router.post(route('leads.filter'), {
+        ...data,
+        page: 1
+    }, {
+        preserveState: true,
+        replace: true,
+    });
+};
 
     return (
         <>
@@ -74,9 +78,25 @@ export default function Index({ leads, filters, statuses}) {
                                     <td className="p-3">{lead.email}</td>
                                     <td className="p-3">{lead.phone}</td>
                                     <td className="p-3">
-                                        <span className="px-2 py-1 text-sm rounded bg-blue-100 text-blue-700">
-                                            {lead.status}
-                                        </span>
+                                        <select value={lead.status} onChange={(e)=> {
+                                            router.patch(
+                                                route('leads.updateStatus', lead.id),
+                                                { status: e.target.value },
+                                                {
+                                                    preserveState: true,
+                                                    preserveScroll: true,
+                                                    replace: true,
+                                                }
+                                            );
+                                        }}
+                                        className="border rounded px-2 py-1 text-sm"
+                                    >
+                                        {statuses.map((status) => (
+                                            <option key={status} value={status}>
+                                                {status}
+                                            </option>
+                                        ))}
+                                    </select>
                                     </td>
                                     <td className="p-3">
                                         {new Date(lead.created_at).toLocaleDateString()}
